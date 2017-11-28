@@ -1,0 +1,8 @@
+service:
+  - name: Stub API
+    domain: ["stub", "default"]
+    scheme: http
+    host: localhost
+    port: 8080
+    endpoint: /
+    # or simply url: https://localhost:8080/stub

@@ -1,0 +1,20 @@
+requires:
+  - Endpoints/StubService.yml
+
+scenario:
+  - name: Test Stub Endpoint
+    domain: stub
+    path:  fuck.json
+    method:  GET
+    headers:
+      Accept: application/json
+    body: >
+      {
+        "fuck": "shit"
+      }
+    expect:
+      status: 200
+      body:
+        fuck: shit
+    store:
+      error_code: "fuck"
