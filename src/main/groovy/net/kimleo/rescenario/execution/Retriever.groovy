@@ -2,8 +2,6 @@ package net.kimleo.rescenario.execution
 
 import com.google.common.collect.LinkedListMultimap
 import com.google.common.collect.Multimap
-import com.google.common.collect.MultimapBuilder
-import com.google.common.collect.TreeMultimap
 import net.kimleo.rescenario.model.Definition
 import net.kimleo.rescenario.model.Service
 
