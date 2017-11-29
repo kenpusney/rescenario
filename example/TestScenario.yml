@@ -4,17 +4,17 @@ requires:
 scenario:
   - name: Test Stub Endpoint
     domain: stub
-    path:  fuck.json
+    path:  test.json
     method:  GET
     headers:
       Accept: application/json
     body: >
       {
-        "fuck": "shit"
+        "test": "value"
       }
     expect:
       status: 200
       body:
-        fuck: shit
+        test: value
     store:
-      error_code: "fuck"
+      test_store: "test"
