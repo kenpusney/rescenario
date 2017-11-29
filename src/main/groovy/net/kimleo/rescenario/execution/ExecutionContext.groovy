@@ -15,6 +15,8 @@ class ExecutionContext {
     Stack<Definition> history = []
 
     ExecutionContext fork() {
-        return new ExecutionContext(parent: this)
+        def forked = new ExecutionContext(parent: this)
+        forked.store.putAll(store)
+        return forked
     }
 }

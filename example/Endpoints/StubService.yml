@@ -6,3 +6,14 @@ service:
     port: 8080
     endpoint: /
     # or simply url: https://localhost:8080/stub
+
+scenario:
+  - name: Should be executed before
+    path:  /service_cannot_be_found
+    method:  GET
+    headers:
+      Accept: application/json
+    expect:
+      status: 404
+    store:
+      upstream_store: $"test"

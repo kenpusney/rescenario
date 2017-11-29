@@ -1,63 +1,89 @@
 package net.kimleo.rescenario.execution
 
+import groovy.text.GStringTemplateEngine
+import groovy.util.logging.Log
 import io.restassured.RestAssured
-import io.restassured.http.Method
-import io.restassured.response.Response
-import io.restassured.specification.RequestSpecification
-import io.restassured.specification.ResponseSpecification
 import net.kimleo.rescenario.model.Definition
 import net.kimleo.rescenario.model.Scenario
-import net.kimleo.rescenario.model.Service
 import net.kimleo.rescenario.model.meta.MetaInfo
-import org.hamcrest.Matcher
 
 import static org.hamcrest.CoreMatchers.containsString
 
+@Log
 class Executor {
-    void exec(Definition definition, ExecutionContext context = null) {
-        boolean initial = (context==null)
+
+    Set<Definition> execQueue = []
+
+    GStringTemplateEngine engine = new GStringTemplateEngine()
+
+    ExecutionContext exec(Definition definition, ExecutionContext context = null) {
+        boolean initial = (context == null)
         context = context ?: new ExecutionContext()
 
+        if (definition in execQueue) {
+            throw new IllegalStateException("Unexpected error: possible recursive dependency")
+        }
+        execQueue.add(definition)
 
         context.currentDefinition = definition
 
-        exec(context, initial)
+        return exec(context, initial)
     }
 
-    void exec(ExecutionContext context, boolean initial) {
-        List<Scenario> scenarios = context.currentDefinition.scenarios
-        List<MetaInfo> meta = context.currentDefinition.meta
+    ExecutionContext exec(ExecutionContext context, boolean initial) {
+        def currentDefn = context.currentDefinition
+        List<Scenario> scenarios = currentDefn.scenarios
+        List<MetaInfo> meta = currentDefn.meta
 
-        def ret = new Retriever(context)
+        currentDefn.dependency.each { defn ->
+            context = exec(defn, context).fork()
+            context.currentDefinition = currentDefn
+        }
 
         scenarios.each { scenario ->
+            def ret = new Retriever(context)
+
+            log.info("Start running scenario [$scenario.name]")
             def services = ret.service(*(scenario.domain))
 
             services.each { service ->
+                log.info("Calling service [$service.name] with $scenario.action")
+
                 def requestSpec = RestAssured
                         .given()
                         .baseUri(service.uri.toString())
-                        .pathParams(context.store)
-                        .headers(scenario.headers)
-                        .body(scenario.body)
+                        .headers(scenario.headers.collectEntries { String key, value ->
+                            [(key): engine.createTemplate(value).make(context.store).toString()]
+                        }).body(scenario.body ?: "")
 
                 def responseSpec = requestSpec.expect()
                         .headers(scenario.expect.headers ?: [:])
-                        .statusCode(scenario.expect.statusCode ?: 200)
+                        .statusCode(scenario.expect.status ?: 200)
 
                 scenario.expect.body.each { key, string ->
                     responseSpec.body(key, containsString(string))
                 }
 
                 def response = requestSpec
-                        .request(scenario.action.method, scenario.action.path)
+                        .request(scenario.action.method,
+                        engine.createTemplate(scenario.action.path)
+                                .make(context.store).toString())
 
 
                 scenario.store.each { var, path ->
-                    ret[var] = response.body().path(path)
+                    if (path.trim().startsWith("\$")) {
+                        log.info("Set variable \$$var with expression: [$path]}")
+                        ret[var] = Eval.me("response", response, path.trim().substring(1))
+                    } else {
+                        log.info("Set variable \$$var with path: [$path]: ${response.body.path(path)} ")
+                        ret[var] = response.body.path(path)
+                    }
                 }
             }
+
         }
+
+        return context
     }
 
 

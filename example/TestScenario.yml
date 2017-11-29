@@ -4,17 +4,30 @@ requires:
 scenario:
   - name: Test Stub Endpoint
     domain: stub
-    path:  test.json
+    path:  /${upstream_store}.json
     method:  GET
     headers:
       Accept: application/json
+    expect:
+      status: 200
+      body:
+        "value" : test
+    store:
+      test_store: $response.body.path("value")
+      contentType: $"application/json"
+
+
+  - name: Test Variable Endpoint
+    domain: stub
+    path: /${test_store}.json
+    method:  GET
+    headers:
+      Accept: ${contentType}
     body: >
       {
-        "test": "value"
+        "value": "test"
       }
     expect:
       status: 200
       body:
-        test: value
-    store:
-      test_store: "test"
+        value: test

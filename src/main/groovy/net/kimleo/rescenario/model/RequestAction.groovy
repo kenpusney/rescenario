@@ -21,4 +21,8 @@ class RequestAction {
     static RequestAction of(String method, String path) {
         return new RequestAction(method: Method.valueOf(method.toUpperCase()), path: path)
     }
+
+    String toString() {
+        return  "[$method $path]"
+    }
 }
