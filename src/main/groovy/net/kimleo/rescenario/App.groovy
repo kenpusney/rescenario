@@ -8,12 +8,10 @@ import java.nio.file.Paths
 
 class App {
     static void main(String[] args) {
-
-        Path path = Paths.get("example", "TestScenario.yml")
+        Path path = Paths.get(args[0])
         def definition = Definition.fromPath(path)
 
         def executor = new Executor()
         executor.exec(definition)
-
     }
 }
