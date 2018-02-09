@@ -31,3 +31,25 @@ scenario:
       status: 200
       body:
         value: test
+
+  - name: run some command
+    type: exec
+    command: echo "hello world"
+
+  - name: eval expr
+    type: eval
+    expr: 1 + 1
+    store: two
+
+  - name: show variable two
+    type: show
+    variable: two
+
+  - name: define a handler
+    type: handler
+    tag: hello
+    block: >
+        { map, ret -> println("hello world") }
+
+  - name: run handler
+    type: hello

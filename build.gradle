@@ -2,7 +2,7 @@
 apply plugin: "groovy"
 
 
-version = '0.0.2'
+version = '0.0.3'
 
 repositories {
     jcenter()
@@ -29,5 +29,5 @@ dependencies {
     compile 'org.yaml:snakeyaml:1.19'
 
     testCompile "org.spockframework:spock-core:1.1-groovy-2.4"
-    testRuntime "net.bytebuddy:byte-buddy:1.6.5" 
+    testRuntime "net.bytebuddy:byte-buddy:1.6.5"
 }

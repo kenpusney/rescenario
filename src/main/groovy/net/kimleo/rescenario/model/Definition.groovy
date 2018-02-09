@@ -14,6 +14,7 @@ class Definition {
     List<MetaInfo> meta = []
     List<Scenario> scenarios = []
     List<Service> services = []
+    List<Template> templates = []
 
     static Map<Path, Definition> cache = [:]
 
@@ -48,6 +49,12 @@ class Definition {
         if ("service" in defn.content) {
             defn.content.service.each { service ->
                 defn.services << Service.buildService(service)
+            }
+        }
+
+        if ("template" in defn.content) {
+            defn.content.template.each { template ->
+                defn.templates << Template.buildTemplate(template);
             }
         }
 
