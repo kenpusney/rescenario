@@ -1,7 +1,9 @@
-# Rescenario
-
 Rescenario is a tool for scenario based RESTful service testing,
 you can create test scenarios easily with it using the DSL.
+
+* TOC
+{:toc}
+
 
 ## Concepts
 
