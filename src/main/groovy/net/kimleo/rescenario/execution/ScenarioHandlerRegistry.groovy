@@ -24,8 +24,10 @@ class ScenarioHandlerRegistry {
 
         registry.register("exec", { Map<String, String> map, Retriever retriever ->
             if (map.command) {
+                List<String> args = map.args ?: []
+                args.add(0, map.command)
                 log.info("Executing command: ${map.command}")
-                def proc = map.command.execute()
+                def proc = args.execute()
                 proc.waitForProcessOutput(System.out, System.err)
             }
         })
