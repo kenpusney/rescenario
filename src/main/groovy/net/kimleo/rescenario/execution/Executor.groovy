@@ -10,8 +10,6 @@ import net.kimleo.rescenario.model.Definition
 import net.kimleo.rescenario.model.Scenario
 import net.kimleo.rescenario.model.meta.MetaInfo
 
-import static org.hamcrest.CoreMatchers.containsString
-
 @Log
 class Executor {
 
@@ -57,57 +55,39 @@ class Executor {
                 return
             }
 
-            def services = ret.service(*(scenario.domain))
+            def service = ret.service(*(scenario.domain)).first()
 
-            services.each { service ->
-                checkDelay(scenario)
+            checkDelay(scenario)
 
-                log.info("Calling service [$service.name] with $scenario.action")
+            log.info("Calling service [$service.name] with $scenario.action")
 
-                RequestSpecification requestSpec
-                ResponseSpecification responseSpec
+            RequestSpecification requestSpec = RestAssured
+                    .given()
+                    .baseUri(service.uri.toString())
+                    .headers(scenario.headers.collectEntries { String key, value ->
+                return [(key): engine.createTemplate(value).make(context.store).toString()]
+            }).body(scenario.body ?: "")
 
-                requestSpec = RestAssured
-                        .given()
-                        .baseUri(service.uri.toString())
-                        .headers(scenario.headers.collectEntries { String key, value ->
-                    [(key): engine.createTemplate(value).make(context.store).toString()]
-                }).body(scenario.body ?: "")
+            ResponseSpecification responseSpec = requestSpec.log().all().expect().log().all()
 
-                if (scenario.expect.headers)
-                    log.info("Matching headers: ${scenario.expect.headers}")
-                if (scenario.expect.status)
-                    log.info("Matching status: ${scenario.expect.status}")
-                responseSpec = requestSpec.log().all().expect()
-                        .headers(scenario.expect.headers ?: [:])
-                        .statusCode(scenario.expect.status ?: 200).log().all()
+            scenario.expect.match(responseSpec, context.store)
 
-                scenario.expect.body.each { key, path ->
-                    log.info("Matching body [$key] with variable path: [$path]")
-                    if (path.startsWith("\$")) {
-                        responseSpec.body(key, containsString(Eval.me("it", ret, path.trim().substring(1))))
-                    } else {
-                        responseSpec.body(key, containsString(ret[path]))
-                    }
+            def response = requestSpec
+                    .request(scenario.action.method,
+                    engine.createTemplate(scenario.action.path)
+                            .make(context.store).toString())
+
+            scenario.store.each { var, expr ->
+                log.info("Set variable \$$var with expression: $expr}")
+                def binding = new Binding()
+                binding.setVariable("response", response)
+                if (response.contentType.contains("json")) {
+                    binding.setVariable("\$json", response.body.as(Map.class))
                 }
-
-                def response = requestSpec
-                        .request(scenario.action.method,
-                        engine.createTemplate(scenario.action.path)
-                                .make(context.store).toString())
-
-                scenario.store.each { var, path ->
-                    if (path.trim().startsWith("\$")) {
-                        log.info("Set variable \$$var with expression: [$path]}")
-                        ret[var] = Eval.me("response", response, path.trim().substring(1))
-                        println("$var == ${ret[var]}")
-                    } else {
-                        log.info("Set variable \$$var with path: [$path]: ${response.body.path(path)} ")
-                        ret[var] = response.body.path(path)
-                    }
-                }
+                binding.setVariable("context", ret)
+                ret[var] = new GroovyShell(binding).evaluate(expr)
+                println("$var == ${ret[var]}")
             }
-
         }
 
         return context

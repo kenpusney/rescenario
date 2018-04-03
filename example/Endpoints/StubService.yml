@@ -16,4 +16,4 @@ scenario:
     expect:
       status: 404
     store:
-      upstream_store: $"test"
+      upstream_store: ("test")

@@ -11,10 +11,12 @@ scenario:
     expect:
       status: 200
       body:
-        "value" : test
+        "value" : ${upstream_store}
     store:
-      test_store: $response.body.path("value")
-      contentType: $"application/json"
+      test_store: >
+        $json.value
+      contentType: >
+        response.contentType
 
 
   - name: Test Variable Endpoint
@@ -31,10 +33,28 @@ scenario:
       status: 200
       body:
         value: test
+        age: 1
+
+  - name: Test Variable Endpoint
+    domain: stub
+    path: /${test_store}.json
+    method:  GET
+    headers:
+      Accept: ${contentType}
+    body: >
+      {
+        "value": "test"
+      }
+    expect:
+      status: 200
+      body: "test"
+
 
   - name: run some command
     type: exec
-    command: echo "hello world"
+    command: echo
+    args:
+       - "hello world"
 
   - name: eval expr
     type: eval

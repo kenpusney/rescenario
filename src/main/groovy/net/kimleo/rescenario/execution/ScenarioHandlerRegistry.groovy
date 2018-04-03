@@ -7,7 +7,7 @@ class ScenarioHandlerRegistry {
     Map<String, ScenarioHandler> handlers = [:];
 
     void register(String name, ScenarioHandler handler) {
-        handlers[name] = handler;
+        handlers[name] = handler
     }
 
     ScenarioHandler retrieve(String name) {
@@ -29,12 +29,21 @@ class ScenarioHandlerRegistry {
                 log.info("Executing command: ${map.command}")
                 def proc = args.execute()
                 proc.waitForProcessOutput(System.out, System.err)
+                if (map.store) {
+                    retriever.put(map.store, proc.exitValue())
+                }
+
             }
         })
 
         registry.register("show", { Map<String, String> map, Retriever retriever ->
             if (map.variable) {
-                log.info("Value for variable '${map.variable}' is [${retriever.get(map.variable)}]")
+                if (map.variable instanceof List) {
+                    for (v in map.variable)
+                        log.info("Value for variable '${v}' is [${retriever.get(v)}]")
+                } else {
+                    log.info("Value for variable '${map.variable}' is [${retriever.get(map.variable)}]")
+                }
             }
         })
 

@@ -2,7 +2,7 @@
 apply plugin: "groovy"
 
 
-version = '0.0.3b'
+version = '0.0.4'
 
 repositories {
     jcenter()

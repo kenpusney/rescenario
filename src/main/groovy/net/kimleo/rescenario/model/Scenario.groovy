@@ -7,7 +7,7 @@ class Scenario {
     RequestAction action = null
     Map<String, String> headers = [:]
     String body = ""
-    Map<String, Map<String, Object>> expect = [:]
+    Expections expect = new Expections([:])
     Map<String, String> store = [:]
     int delay = 0
 
@@ -26,7 +26,7 @@ class Scenario {
         scenario.action = RequestAction.of(yaml.action, yaml.method, yaml.path)
         scenario.headers = yaml.headers ?: [:]
         scenario.body = yaml.body
-        scenario.expect = yaml.expect ?: [:]
+        scenario.expect = new Expections(yaml.expect ?: [:])
         scenario.store = yaml.store ?: [:]
         return scenario
     }
