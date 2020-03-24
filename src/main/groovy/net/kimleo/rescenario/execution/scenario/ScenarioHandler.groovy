@@ -1,4 +1,6 @@
-package net.kimleo.rescenario.execution
+package net.kimleo.rescenario.execution.scenario
+
+import net.kimleo.rescenario.execution.Retriever
 
 @FunctionalInterface
 interface ScenarioHandler {

@@ -8,7 +8,9 @@ class ExecutionContext {
     Definition currentDefinition
 
     void setCurrentDefinition(Definition definition) {
-        if (currentDefinition == null) history.push(currentDefinition)
+        if (currentDefinition == null) {
+            history << currentDefinition
+        }
         currentDefinition = definition
     }
 

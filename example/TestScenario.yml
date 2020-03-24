@@ -1,6 +1,9 @@
 requires:
   - Endpoints/StubService.yml
 
+handlers:
+  - net.kimleo.rescenario.example.ExampleHandler
+
 scenario:
   - name: Test Stub Endpoint
     domain: stub
@@ -17,7 +20,6 @@ scenario:
         $json.value
       contentType: >
         response.contentType
-
 
   - name: Test Variable Endpoint
     domain: stub
@@ -54,7 +56,7 @@ scenario:
     type: exec
     command: echo
     args:
-       - "hello world"
+      - "hello world"
 
   - name: eval expr
     type: eval
@@ -69,7 +71,10 @@ scenario:
     type: handler
     tag: hello
     block: >
-        { map, ret -> println("hello world") }
+      { map, ret -> println("hello world") }
 
   - name: run handler
     type: hello
+
+  - name: run the example handler
+    type: example

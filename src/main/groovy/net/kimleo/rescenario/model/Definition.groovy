@@ -1,5 +1,6 @@
 package net.kimleo.rescenario.model
 
+import net.kimleo.rescenario.execution.scenario.handlers.ScenarioHandlerRegistry
 import net.kimleo.rescenario.model.meta.MetaInfo
 import org.yaml.snakeyaml.Yaml
 
@@ -12,7 +13,7 @@ class Definition {
     Object content
     List<Definition> dependency = []
     List<MetaInfo> meta = []
-    List<Scenario> scenarios = []
+    List<BasicScenario> scenarios = []
     List<Service> services = []
     List<Template> templates = []
 
@@ -36,12 +37,19 @@ class Definition {
             }
         }
 
+        if ("handlers" in defn.content) {
+            def registry = ScenarioHandlerRegistry.defaultRegistry()
+            defn.content.handlers.each { handler ->
+                registry.registerClass(handler)
+            }
+        }
+
         if ("scenario" in defn.content) {
             defn.content.scenario.each { scene ->
                 if ("meta" in scene) {
                     defn.meta << MetaInfo.of(scene)
                 } else {
-                    defn.scenarios << Scenario.from(scene);
+                    defn.scenarios << new BasicScenario(scene);
                 }
             }
         }

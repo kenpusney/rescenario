@@ -1,4 +1,4 @@
-package net.kimleo.rescenario.model
+package net.kimleo.rescenario.model.rest
 
 import groovy.text.GStringTemplateEngine
 import groovy.text.SimpleTemplateEngine
