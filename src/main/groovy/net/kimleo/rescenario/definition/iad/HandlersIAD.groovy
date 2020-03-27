@@ -1,9 +1,9 @@
-package net.kimleo.rescenario.model.iad
+package net.kimleo.rescenario.definition.iad
 
 import net.kimleo.rescenario.execution.scenario.handlers.ScenarioHandlerRegistry
 import net.kimleo.rescenario.model.Definition
 import net.kimleo.rescenario.model.DefinitionType
-import net.kimleo.rescenario.model.IAsDefinition
+import net.kimleo.rescenario.definition.IAsDefinition
 
 @DefinitionType("handlers")
 class HandlersIAD implements IAsDefinition {

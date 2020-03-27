@@ -1,11 +1,12 @@
-package net.kimleo.rescenario.model
+package net.kimleo.rescenario.definition
 
 import groovy.util.logging.Log
-import net.kimleo.rescenario.model.iad.HandlersIAD
-import net.kimleo.rescenario.model.iad.RequirementIAD
-import net.kimleo.rescenario.model.iad.ScenarioIAD
-import net.kimleo.rescenario.model.iad.ServiceIAD
-import net.kimleo.rescenario.model.iad.TemplateIAD
+import net.kimleo.rescenario.model.DefinitionType
+import net.kimleo.rescenario.definition.iad.HandlersIAD
+import net.kimleo.rescenario.definition.iad.RequirementIAD
+import net.kimleo.rescenario.definition.iad.ScenarioIAD
+import net.kimleo.rescenario.definition.iad.ServiceIAD
+import net.kimleo.rescenario.definition.iad.TemplateIAD
 
 @Log
 class IADRegistry {
