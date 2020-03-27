@@ -14,7 +14,17 @@ class Definition {
     List<BasicScenario> scenarios = []
     List<Service> services = []
     List<Template> templates = []
-    List<ParameterData> parameters = []
+    List<ParameterData> data = []
+
+    List<Map> dataSets() {
+        List<Map> maps = data.collectMany { it.dataSets }
+
+        if (maps.isEmpty()) {
+            return [[:]]
+        }
+
+        return maps
+    }
 
     Path parent() {
         return this.path.getParent()

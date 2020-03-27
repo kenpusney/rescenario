@@ -1,7 +1,7 @@
 package net.kimleo.rescenario.execution.scenario.handlers
 
 import groovy.util.logging.Log
-import net.kimleo.rescenario.execution.Retriever
+import net.kimleo.rescenario.execution.ExecutionContext
 import net.kimleo.rescenario.execution.scenario.ScenarioHandler
 import net.kimleo.rescenario.execution.scenario.ScenarioType
 
@@ -16,7 +16,7 @@ class DefinitionHandler implements ScenarioHandler {
     }
 
     @Override
-    void executeScenario(Map<String, Object> map, Retriever retriever) {
+    void executeScenario(Map<String, Object> map, ExecutionContext context) {
         if (map.tag && map.block) {
             log.info("Defining a handler with tag '${map.tag}'")
             if (registry.retrieve(map.tag as String) != null) {

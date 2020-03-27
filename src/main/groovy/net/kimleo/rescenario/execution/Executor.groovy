@@ -11,39 +11,58 @@ class Executor {
 
     Set<Definition> execQueue = []
 
-    ExecutionContext exec(Definition definition, ExecutionContext context = null) {
-        boolean initial = (context == null)
-        context = context ?: new ExecutionContext()
-
-        if (definition in execQueue) {
-            throw new IllegalStateException("Unexpected error: possible recursive dependency")
-        }
-        execQueue.add(definition)
-
-        context.currentDefinition = definition
-
-        return exec(context, initial)
+    class Execution {
+        List<Execution> dependency = []
+        List<BasicScenario> scenarios = []
     }
 
-    ExecutionContext exec(ExecutionContext context, boolean initial) {
-        def currentDefn = context.currentDefinition
-        def scenarios = currentDefn.scenarios
-        def meta = currentDefn.meta
+    Execution buildExecutionGraph(Definition definition) {
+        def execution = new Execution()
+        execution.scenarios = definition.scenarios
 
-        currentDefn.dependency.each { defn ->
-            context = exec(defn, context).fork()
-            context.currentDefinition = currentDefn
+        if (!definition.dependency?.empty) {
+            def dependency = definition.dependency.collect { buildExecutionGraph(it) }
+            execution.dependency = dependency
         }
 
-        scenarios.each { scenario ->
-            executeScenario(context, scenario)
-        }
-
-        return context
+        return execution
     }
+
+    List<BasicScenario> scenarioSteps(Execution execution) {
+        if (execution.dependency) {
+            List<BasicScenario> dependencySteps =
+                    execution.dependency.collectMany { scenarioSteps(it) }
+            return dependencySteps + execution.scenarios
+        }
+        return execution.scenarios
+    }
+
+
+    void executeParametricScenarios(List<BasicScenario> scenarios, Definition definition) {
+        List<Map> dataSets = definition.dataSets()
+
+        dataSets.each { data ->
+
+            def context = new ExecutionContext()
+            context.data = data
+            context.definition = definition
+            context.initializeData()
+            scenarios.each { scenario ->
+                executeScenario(context, scenario)
+            }
+        }
+
+    }
+
+    void execute(Definition definition) {
+        def execution = buildExecutionGraph(definition)
+        def scenarios = scenarioSteps(execution)
+
+        executeParametricScenarios(scenarios, definition)
+    }
+
 
     private void executeScenario(ExecutionContext context, BasicScenario scenario) {
-        def ret = new RuntimeRetriever(context)
 
         log.info("Start running scenario [$scenario.name]")
 
@@ -51,7 +70,7 @@ class Executor {
         ScenarioHandlerRegistry
                     .defaultRegistry()
                     .retrieve(scenario.type)
-                    ?.executeScenario(scenario.yaml, ret)
+                    ?.executeScenario(scenario.yaml, context)
     }
 
     private void checkDelay(BasicScenario scenario) {

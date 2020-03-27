@@ -1,7 +1,7 @@
 package net.kimleo.rescenario.execution.scenario.handlers
 
 import groovy.util.logging.Log
-import net.kimleo.rescenario.execution.Retriever
+import net.kimleo.rescenario.execution.ExecutionContext
 import net.kimleo.rescenario.execution.scenario.ScenarioHandler
 import net.kimleo.rescenario.execution.scenario.ScenarioType
 
@@ -9,7 +9,7 @@ import net.kimleo.rescenario.execution.scenario.ScenarioType
 @Log
 class ExecHandler implements ScenarioHandler{
     @Override
-    void executeScenario(Map<String, Object> yaml, Retriever retriever) {
+    void executeScenario(Map<String, Object> yaml, ExecutionContext context) {
         if (yaml.command) {
             List<String> args = yaml.args ?: []
             args.add(0, yaml.command as String)
@@ -17,7 +17,7 @@ class ExecHandler implements ScenarioHandler{
             def proc = args.execute()
             proc.waitForProcessOutput(System.out, System.err)
             if (yaml.store) {
-                retriever.put(yaml.store as String, proc.exitValue())
+                context.put(yaml.store as String, proc.exitValue())
             }
         }
     }

@@ -5,8 +5,8 @@ import groovy.util.logging.Log
 import io.restassured.RestAssured
 import io.restassured.specification.RequestSpecification
 import io.restassured.specification.ResponseSpecification
+import net.kimleo.rescenario.execution.ExecutionContext
 import net.kimleo.rescenario.execution.Retriever
-import net.kimleo.rescenario.execution.RuntimeRetriever
 import net.kimleo.rescenario.execution.scenario.ScenarioHandler
 import net.kimleo.rescenario.execution.scenario.ScenarioType
 import net.kimleo.rescenario.model.rest.RestScenario
@@ -16,11 +16,10 @@ import net.kimleo.rescenario.model.rest.RestScenario
 class RestHandler implements ScenarioHandler {
     GStringTemplateEngine engine = new GStringTemplateEngine()
 
-    private void execute(RuntimeRetriever ret, RestScenario scenario) {
-        def context = ret.context()
+    private void execute(ExecutionContext context, RestScenario scenario) {
         log.info("Start running scenario [$scenario.name]")
 
-        def service = ret.service(*(scenario.domain)).first()
+        def service = context.service(*(scenario.domain)).first()
 
         log.info("Calling service [$service.name] with $scenario.action")
 
@@ -47,14 +46,14 @@ class RestHandler implements ScenarioHandler {
             if (response.contentType.contains("json")) {
                 binding.setVariable("\$json", response.body.as(Map.class))
             }
-            binding.setVariable("context", ret)
-            ret[var] = new GroovyShell(binding).evaluate(expr)
-            println("$var == ${ret[var]}")
+            binding.setVariable("context", context)
+            context[var] = new GroovyShell(binding).evaluate(expr)
+            println("$var == ${context[var]}")
         }
     }
 
     @Override
-    void executeScenario(Map<String, Object> yaml, Retriever retriever) {
-        execute(retriever as RuntimeRetriever, RestScenario.from(yaml));
+    void executeScenario(Map<String, Object> yaml, ExecutionContext context) {
+        execute(context, RestScenario.from(yaml));
     }
 }

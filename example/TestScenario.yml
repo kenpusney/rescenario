@@ -1,3 +1,6 @@
+data:
+  - TestData/CsvData.csv
+
 requires:
   - Endpoints/StubService.yml
 
@@ -71,7 +74,11 @@ scenarios:
     type: handler
     tag: hello
     block: >
-      { map, ret -> println("hello world") }
+      { map, context -> println("hello world") }
+
+  - name: show data set
+    type: show
+    variable: name
 
   - name: run handler
     type: hello

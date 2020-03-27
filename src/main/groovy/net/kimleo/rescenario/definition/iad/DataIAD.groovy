@@ -14,7 +14,7 @@ class DataIAD implements IAsDefinition<List<String>>{
     def tryDef(List<String> data, Definition definition) {
         data.each { dataFile ->
             def dataPath = Paths.get(definition.parent().toString(), dataFile)
-            definition.parameters << DataFileLoader.load(dataPath)
+            definition.data << DataFileLoader.load(dataPath)
         }
     }
 }

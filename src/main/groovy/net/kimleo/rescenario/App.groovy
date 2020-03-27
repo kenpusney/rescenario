@@ -13,6 +13,6 @@ class App {
         def definition = DefinitionLoader.fromPath(path)
 
         def executor = new Executor()
-        executor.exec(definition)
+        executor.execute(definition)
     }
 }
