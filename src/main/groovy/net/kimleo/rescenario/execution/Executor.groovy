@@ -46,7 +46,6 @@ class Executor {
             def context = new ExecutionContext()
             context.data = data
             context.definition = definition
-            context.initializeData()
             scenarios.each { scenario ->
                 executeScenario(context, scenario)
             }
