@@ -6,7 +6,7 @@ import net.kimleo.rescenario.model.DefinitionType
 import net.kimleo.rescenario.definition.IAsDefinition
 
 @DefinitionType("handlers")
-class HandlersIAD implements IAsDefinition {
+class HandlerIAD implements IAsDefinition {
 
     @Override
     def tryDef(handlers, Definition definition) {

@@ -1,4 +1,4 @@
-service:
+services:
   - name: Stub API
     domain: ["stub", "default"]
     scheme: http
@@ -7,7 +7,7 @@ service:
     endpoint: /
     # or simply url: https://localhost:8080/stub
 
-scenario:
+scenarios:
   - name: Should be executed before
     path:  /service_cannot_be_found
     method:  GET

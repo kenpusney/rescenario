@@ -4,7 +4,7 @@ requires:
 handlers:
   - net.kimleo.rescenario.example.ExampleHandler
 
-scenario:
+scenarios:
   - name: Test Stub Endpoint
     domain: stub
     path:  /${upstream_store}.json

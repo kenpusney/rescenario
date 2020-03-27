@@ -2,7 +2,7 @@ package net.kimleo.rescenario.definition
 
 import groovy.util.logging.Log
 import net.kimleo.rescenario.model.DefinitionType
-import net.kimleo.rescenario.definition.iad.HandlersIAD
+import net.kimleo.rescenario.definition.iad.HandlerIAD
 import net.kimleo.rescenario.definition.iad.RequirementIAD
 import net.kimleo.rescenario.definition.iad.ScenarioIAD
 import net.kimleo.rescenario.definition.iad.ServiceIAD
@@ -18,13 +18,11 @@ class IADRegistry {
         if (!iads.isEmpty()) {
             return
         }
-
         registerDefinition(ServiceIAD.class)
-        registerDefinition(HandlersIAD.class)
+        registerDefinition(HandlerIAD.class)
         registerDefinition(TemplateIAD.class)
         registerDefinition(ScenarioIAD.class)
         registerDefinition(RequirementIAD.class)
-
     }
 
     def registerDefinition(String key, IAsDefinition iad) {

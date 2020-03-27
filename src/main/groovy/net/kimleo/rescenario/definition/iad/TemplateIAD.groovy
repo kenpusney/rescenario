@@ -5,7 +5,7 @@ import net.kimleo.rescenario.model.DefinitionType
 import net.kimleo.rescenario.definition.IAsDefinition
 import net.kimleo.rescenario.model.Template
 
-@DefinitionType("template")
+@DefinitionType("templates")
 class TemplateIAD implements IAsDefinition<List<Map>> {
     @Override
     def tryDef(List<Map> template, Definition definition) {

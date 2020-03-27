@@ -6,7 +6,7 @@ import net.kimleo.rescenario.model.DefinitionType
 import net.kimleo.rescenario.definition.IAsDefinition
 import net.kimleo.rescenario.model.meta.MetaInfo
 
-@DefinitionType("scenario")
+@DefinitionType("scenarios")
 class ScenarioIAD implements IAsDefinition<List<Map>> {
     @Override
     def tryDef(List<Map> scenarios, Definition definition) {

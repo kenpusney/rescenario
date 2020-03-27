@@ -5,7 +5,7 @@ import net.kimleo.rescenario.model.DefinitionType
 import net.kimleo.rescenario.definition.IAsDefinition
 import net.kimleo.rescenario.model.Service
 
-@DefinitionType("service")
+@DefinitionType("services")
 class ServiceIAD implements IAsDefinition<List<Map>> {
 
     @Override
