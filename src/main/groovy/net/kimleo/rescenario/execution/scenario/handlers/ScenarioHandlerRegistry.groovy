@@ -40,8 +40,18 @@ class ScenarioHandlerRegistry {
         registry.register(ExecHandler.class)
         registry.register(ShowHandler.class)
         registry.register(EvalHandler.class)
-        registry.register(DefinitionHandler.class, registry)
+        registry.register(ScriptHandler.class, registry)
         registry.register(RestHandler.class)
         return registry
+    }
+
+    ScenarioHandler findByShortcut(Map<String, Object> yaml) {
+        def matched = handlers.keySet().grep { key ->
+            return yaml.containsKey(key)
+        }
+        if (!matched.empty && matched.first() != null) {
+            return handlers[matched.first()]
+        }
+        return null
     }
 }

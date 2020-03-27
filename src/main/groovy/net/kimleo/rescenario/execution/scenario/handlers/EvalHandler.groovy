@@ -16,4 +16,13 @@ class EvalHandler implements ScenarioHandler {
                     Eval.me("it", context, map.expr as String))
         }
     }
+
+    @Override
+    void shortCut(Map<String, Object> yaml, ExecutionContext context) {
+        if (yaml.eval) {
+            def map = new HashMap<>(yaml)
+            map.expr = yaml.eval
+            executeScenario(map, context)
+        }
+    }
 }

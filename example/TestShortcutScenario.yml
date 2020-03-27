@@ -1,0 +1,24 @@
+handlers:
+  - net.kimleo.rescenario.example.ExampleHandler
+
+scenarios:
+  - name: run some command
+    exec: ["echo", "hello world"]
+
+  - name: eval expr
+    eval: 1 + 1
+    store: two
+
+  - name: show variable two
+    show: two
+
+  - name: define a handler
+    script: >
+      { map, context -> println("hello world") }
+    tag: hello
+
+  - name: run handler
+    hello:
+
+  - name: run the example handler
+    example:

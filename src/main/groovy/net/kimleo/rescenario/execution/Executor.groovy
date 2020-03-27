@@ -66,10 +66,20 @@ class Executor {
         log.info("Start running scenario [$scenario.name]")
 
         checkDelay(scenario)
-        ScenarioHandlerRegistry
-                    .defaultRegistry()
-                    .retrieve(scenario.type)
+        def registry = ScenarioHandlerRegistry
+                .defaultRegistry()
+        if (scenario.type != null){
+            registry.retrieve(scenario.type)
                     ?.executeScenario(scenario.yaml, context)
+        } else {
+            def handler = registry.findByShortcut(scenario.yaml)
+            if (handler != null) {
+                handler.shortCut(scenario.yaml, context)
+            } else {
+                registry.retrieve("rest")?.executeScenario(scenario.yaml, context)
+            }
+        }
+
     }
 
     private void checkDelay(BasicScenario scenario) {

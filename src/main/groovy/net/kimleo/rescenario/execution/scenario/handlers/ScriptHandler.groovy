@@ -5,13 +5,13 @@ import net.kimleo.rescenario.execution.ExecutionContext
 import net.kimleo.rescenario.execution.scenario.ScenarioHandler
 import net.kimleo.rescenario.execution.scenario.ScenarioType
 
-@ScenarioType("handler")
+@ScenarioType("script")
 @Log
-class DefinitionHandler implements ScenarioHandler {
+class ScriptHandler implements ScenarioHandler {
 
     private final ScenarioHandlerRegistry registry
 
-    DefinitionHandler(ScenarioHandlerRegistry registry) {
+    ScriptHandler(ScenarioHandlerRegistry registry) {
         this.registry = registry
     }
 
@@ -26,6 +26,15 @@ class DefinitionHandler implements ScenarioHandler {
                 log.info("Executing customized handler ${map.tag}")
                 (Eval.me(map.block as String) as ScenarioHandler).executeScenario(m, r)
             })
+        }
+    }
+
+    @Override
+    void shortCut(Map<String, Object> yaml, ExecutionContext context) {
+        if (yaml.script) {
+            def map = new HashMap<>(yaml)
+            map.block = yaml.script
+            executeScenario(map, context)
         }
     }
 }

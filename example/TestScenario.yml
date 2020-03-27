@@ -71,7 +71,7 @@ scenarios:
     variable: two
 
   - name: define a handler
-    type: handler
+    type: script
     tag: hello
     block: >
       { map, context -> println("hello world") }

@@ -19,4 +19,13 @@ class ShowHandler implements ScenarioHandler {
             }
         }
     }
+
+    @Override
+    void shortCut(Map<String, Object> yaml, ExecutionContext context) {
+        if (yaml.show) {
+            def map = new HashMap<>(yaml)
+            map.variable = yaml.show
+            executeScenario(map, context)
+        }
+    }
 }
