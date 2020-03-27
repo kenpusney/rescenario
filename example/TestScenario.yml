@@ -5,7 +5,7 @@ requires:
   - Endpoints/StubService.yml
 
 handlers:
-  - net.kimleo.rescenario.example.ExampleHandler
+  - net.kimleo.res.example.ExampleHandler
 
 scenarios:
   - name: Test Stub Endpoint

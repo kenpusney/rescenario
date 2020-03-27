@@ -1,4 +1,5 @@
-# rescenario
-Scenario based REST service test automation tools
+# Res
+
+Regression Engine of Scenarios. (previously `rescenario`)
 
 see `example` directory for usage.

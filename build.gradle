@@ -1,43 +1,22 @@
 
-apply plugin: "groovy"
+
+subprojects {
+    apply plugin: "groovy"
 
 
-version = '0.0.4'
+    version = '0.0.4'
 
-repositories {
-    maven {
-        url "https://maven.aliyun.com/repository/central"
+    repositories {
+        maven {
+            url "https://maven.aliyun.com/repository/central"
+        }
+        maven {
+            url "https://maven.aliyun.com/repository/jcenter"
+        }
     }
-    maven {
-        url "https://maven.aliyun.com/repository/jcenter"
+
+    test {
+        useJUnitPlatform()
     }
-}
 
-task fatJar(type: Jar) {
-    manifest {
-        attributes 'Implementation-Title': 'ReScenario',
-                'Implementation-Version': version,
-                'Main-Class': 'net.kimleo.rescenario.App'
-    }
-    baseName = project.name
-    from { configurations.runtime.collect { it.isDirectory() ? it : zipTree(it) } }
-    with jar
-}
-
-
-test {
-    useJUnitPlatform()
-}
-
-dependencies {
-    compile "org.codehaus.groovy:groovy-all:3.0.2"
-
-    compile 'io.rest-assured:rest-assured:3.0.6'
-    compile 'io.rest-assured:json-schema-validator:3.0.6'
-
-    compile 'org.yaml:snakeyaml:1.26'
-    compile 'com.opencsv:opencsv:5.1'
-
-    testCompile "org.spockframework:spock-core:2.0-M2-groovy-3.0"
-    testRuntime "net.bytebuddy:byte-buddy:1.6.5"
 }

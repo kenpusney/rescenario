@@ -1,4 +1,4 @@
-Rescenario is a tool for scenario based RESTful service testing,
+Res is a tool for scenario based RESTful service testing,
 you can create test scenarios easily with its DSL.
 
 * TOC
@@ -7,7 +7,7 @@ you can create test scenarios easily with its DSL.
 
 ## Concepts
 
-Recenario using YAML as the format to maintain its scenario definitions,
+Res using YAML as the format to maintain its scenario definitions,
 it have some basic elements:
 
   - `requires` definition, to import external dependencies

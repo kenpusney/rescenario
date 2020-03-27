@@ -15,4 +15,7 @@ include 'api'
 include 'services:webservice'
 */
 
-rootProject.name = 'rescenario'
+rootProject.name = 'res'
+
+include 'res-core'
+include 'res-app'

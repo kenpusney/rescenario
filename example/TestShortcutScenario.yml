@@ -1,5 +1,5 @@
 handlers:
-  - net.kimleo.rescenario.example.ExampleHandler
+  - net.kimleo.res.example.ExampleHandler
 
 scenarios:
   - name: run some command

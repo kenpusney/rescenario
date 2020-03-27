@@ -1,0 +1,26 @@
+
+task fatJar(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': 'Res',
+                'Implementation-Version': version,
+                'Main-Class': 'net.kimleo.res.App'
+    }
+    baseName = project.name
+    from { configurations.runtime.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
+dependencies {
+    implementation "org.codehaus.groovy:groovy-all:3.0.2"
+    implementation project(':res-core')
+
+    implementation 'io.rest-assured:rest-assured:3.0.6'
+    implementation 'io.rest-assured:json-schema-validator:3.0.6'
+
+    implementation 'org.yaml:snakeyaml:1.26'
+    implementation 'com.opencsv:opencsv:5.1'
+
+    testImplementation "org.spockframework:spock-core:2.0-M2-groovy-3.0"
+    testRuntime "org.codehaus.groovy:groovy-all:3.0.2"
+    testRuntime "net.bytebuddy:byte-buddy:1.6.5"
+}

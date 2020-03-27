@@ -35,7 +35,7 @@ Run `java -jar rescenario.jar Scenario.yml`, and you'll see the result.
 
 ### Definitions
 
-A Rescenario file contains multiple definitions: `requires`, `services` and `scenarios`.
+A Res file contains multiple definitions: `requires`, `services` and `scenarios`.
 
 #### `requires` definition
 
@@ -164,7 +164,7 @@ TODO
 
 ### The storage
 
-Rescenario uses a layered storage system, for each dependent, 
+Res uses a layered storage system, for each dependent, 
 they can access and override the variable in it's dependency,
 but cannot modify them. i.e. when the dependency were called
 again, they still retrieve's original dependency's value.
