@@ -70,7 +70,7 @@ scenarios:
     type: show
     variable: two
 
-  - name: define a handler
+  - name: define a script handler
     type: script
     tag: hello
     block: >
@@ -80,7 +80,7 @@ scenarios:
     type: show
     variable: name
 
-  - name: run handler
+  - name: run script handler
     type: hello
 
   - name: run the example handler

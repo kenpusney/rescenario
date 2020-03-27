@@ -12,12 +12,12 @@ scenarios:
   - name: show variable two
     show: two
 
-  - name: define a handler
+  - name: define a script handler
     script: >
       { map, context -> println("hello world") }
     tag: hello
 
-  - name: run handler
+  - name: run script handler
     hello:
 
   - name: run the example handler
