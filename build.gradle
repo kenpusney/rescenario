@@ -5,7 +5,12 @@ apply plugin: "groovy"
 version = '0.0.4'
 
 repositories {
-    jcenter()
+    maven {
+        url "https://maven.aliyun.com/repository/central"
+    }
+    maven {
+        url "https://maven.aliyun.com/repository/jcenter"
+    }
 }
 
 task fatJar(type: Jar) {
@@ -21,13 +26,13 @@ task fatJar(type: Jar) {
 
 
 dependencies {
-    compile "org.codehaus.groovy:groovy-all:2.4.13"
+    compile "org.codehaus.groovy:groovy-all:3.0.2"
 
     compile 'io.rest-assured:rest-assured:3.0.6'
     compile 'io.rest-assured:json-schema-validator:3.0.6'
 
-    compile 'org.yaml:snakeyaml:1.19'
+    compile 'org.yaml:snakeyaml:1.26'
 
-    testCompile "org.spockframework:spock-core:1.1-groovy-2.4"
+    testCompile "org.spockframework:spock-core:2.0-M2-groovy-3.0"
     testRuntime "net.bytebuddy:byte-buddy:1.6.5"
 }
