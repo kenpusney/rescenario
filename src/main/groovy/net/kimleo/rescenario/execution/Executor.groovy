@@ -51,7 +51,7 @@ class Executor {
         ScenarioHandlerRegistry
                     .defaultRegistry()
                     .retrieve(scenario.type)
-                    ?.executeScenario(((BasicScenario) scenario).yaml, ret)
+                    ?.executeScenario(scenario.yaml, ret)
     }
 
     private void checkDelay(BasicScenario scenario) {

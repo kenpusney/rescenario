@@ -1,13 +1,14 @@
 package net.kimleo.rescenario.model
 
-import net.kimleo.rescenario.execution.scenario.handlers.ScenarioHandlerRegistry
+import groovy.util.logging.Log
+import net.kimleo.rescenario.model.iad.*
 import net.kimleo.rescenario.model.meta.MetaInfo
 import org.yaml.snakeyaml.Yaml
 
 import java.nio.file.Files
 import java.nio.file.Path
-import java.nio.file.Paths
 
+@Log
 class Definition {
     Path path
     Object content
@@ -17,9 +18,16 @@ class Definition {
     List<Service> services = []
     List<Template> templates = []
 
+    Path parent() {
+        return this.path.getParent()
+    }
+
     static Map<Path, Definition> cache = [:]
 
+    static Map<String, IAsDefinition> definitionsRegistry = [:]
+
     static Definition fromPath(Path path, reload = false) {
+        loadRegistry()
         if (path in cache && !reload) {
             return cache[path]
         }
@@ -30,42 +38,41 @@ class Definition {
         defn.content = new Yaml().load(input)
         cache[path] = defn
 
-        if ("requires" in defn.content) {
-            defn.content.requires.each { req ->
-                def reqPath = Paths.get(path.getParent().toString(), req)
-                defn.dependency << fromPath(reqPath)
-            }
-        }
-
-        if ("handlers" in defn.content) {
-            def registry = ScenarioHandlerRegistry.defaultRegistry()
-            defn.content.handlers.each { handler ->
-                registry.registerClass(handler)
-            }
-        }
-
-        if ("scenario" in defn.content) {
-            defn.content.scenario.each { scene ->
-                if ("meta" in scene) {
-                    defn.meta << MetaInfo.of(scene)
-                } else {
-                    defn.scenarios << new BasicScenario(scene);
-                }
-            }
-        }
-
-        if ("service" in defn.content) {
-            defn.content.service.each { service ->
-                defn.services << Service.buildService(service)
-            }
-        }
-
-        if ("template" in defn.content) {
-            defn.content.template.each { template ->
-                defn.templates << Template.buildTemplate(template);
+        for (def iad: definitionsRegistry) {
+            if (iad.key in defn.content) {
+                iad.value.tryDef(defn.content[iad.key], defn)
             }
         }
 
         return (defn)
+    }
+
+    static def registerDefinition(String key, IAsDefinition iad) {
+        if (definitionsRegistry.containsKey(key)) {
+            log.warning("Redefined definition ${key}")
+        }
+        definitionsRegistry.put(key, iad)
+    }
+
+    static def registerDefinition(clz) {
+        DefinitionType annotation = clz.getAnnotation(DefinitionType.class)
+        if (annotation == null || !clz.interfaces.contains(IAsDefinition.class)) {
+            throw new IllegalStateException("${clz} is not a scenario handler")
+        }
+        String value = annotation.value();
+        definitionsRegistry.put(value, (IAsDefinition) clz.newInstance())
+    }
+
+    static def loadRegistry() {
+        if (!definitionsRegistry.isEmpty()) {
+            return
+        }
+
+        registerDefinition(ServiceIAD.class)
+        registerDefinition(HandlersIAD.class)
+        registerDefinition(TemplateIAD.class)
+        registerDefinition(ScenarioIAD.class)
+        registerDefinition(RequirementIAD.class)
+
     }
 }
