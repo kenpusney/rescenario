@@ -19,7 +19,7 @@ class RestHandler implements ScenarioHandler {
     private void execute(ExecutionContext context, RestScenario scenario) {
         log.info("Start running scenario [$scenario.name]")
 
-        def service = context.service(*(scenario.domain)).first()
+        def service = context.definition.service(*(scenario.domain)).first()
 
         log.info("Calling service [$service.name] with $scenario.action")
 
