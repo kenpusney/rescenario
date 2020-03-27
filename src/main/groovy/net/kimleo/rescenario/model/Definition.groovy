@@ -24,10 +24,9 @@ class Definition {
 
     static Map<Path, Definition> cache = [:]
 
-    static Map<String, IAsDefinition> definitionsRegistry = [:]
-
     static Definition fromPath(Path path, reload = false) {
-        loadRegistry()
+        def iadRegistry = IADRegistry.get()
+
         if (path in cache && !reload) {
             return cache[path]
         }
@@ -38,41 +37,12 @@ class Definition {
         defn.content = new Yaml().load(input)
         cache[path] = defn
 
-        for (def iad: definitionsRegistry) {
+        for (def iad: iadRegistry.iads) {
             if (iad.key in defn.content) {
                 iad.value.tryDef(defn.content[iad.key], defn)
             }
         }
 
         return (defn)
-    }
-
-    static def registerDefinition(String key, IAsDefinition iad) {
-        if (definitionsRegistry.containsKey(key)) {
-            log.warning("Redefined definition ${key}")
-        }
-        definitionsRegistry.put(key, iad)
-    }
-
-    static def registerDefinition(clz) {
-        DefinitionType annotation = clz.getAnnotation(DefinitionType.class)
-        if (annotation == null || !clz.interfaces.contains(IAsDefinition.class)) {
-            throw new IllegalStateException("${clz} is not a scenario handler")
-        }
-        String value = annotation.value();
-        definitionsRegistry.put(value, (IAsDefinition) clz.newInstance())
-    }
-
-    static def loadRegistry() {
-        if (!definitionsRegistry.isEmpty()) {
-            return
-        }
-
-        registerDefinition(ServiceIAD.class)
-        registerDefinition(HandlersIAD.class)
-        registerDefinition(TemplateIAD.class)
-        registerDefinition(ScenarioIAD.class)
-        registerDefinition(RequirementIAD.class)
-
     }
 }
