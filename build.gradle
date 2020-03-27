@@ -25,6 +25,10 @@ task fatJar(type: Jar) {
 }
 
 
+test {
+    useJUnitPlatform()
+}
+
 dependencies {
     compile "org.codehaus.groovy:groovy-all:3.0.2"
 
@@ -32,6 +36,7 @@ dependencies {
     compile 'io.rest-assured:json-schema-validator:3.0.6'
 
     compile 'org.yaml:snakeyaml:1.26'
+    compile 'com.opencsv:opencsv:5.1'
 
     testCompile "org.spockframework:spock-core:2.0-M2-groovy-3.0"
     testRuntime "net.bytebuddy:byte-buddy:1.6.5"
