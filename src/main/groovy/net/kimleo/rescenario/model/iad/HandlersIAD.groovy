@@ -8,6 +8,7 @@ import net.kimleo.rescenario.model.IAsDefinition
 @DefinitionType("handlers")
 class HandlersIAD implements IAsDefinition {
 
+    @Override
     def tryDef(handlers, Definition definition) {
         for (def handlerInfo: handlers) {
             if (handlerInfo instanceof String) {
