@@ -1,4 +1,4 @@
-# Document v0.0.3
+# Document v0.0.4
 
 * TOC
 {:toc}
@@ -7,7 +7,7 @@
 
 **File: Scenario.yml**
 ```yaml
-service:
+services:
   - name: Example API
     domain: ["example", "default"]
     scheme: http
@@ -16,7 +16,7 @@ service:
     endpoint: /
     # or simply url: https://localhost:8080/
 
-scenario:
+scenarios:
   - name: Test Some Endpoint
     domain: example
     path:  /hello.json
@@ -35,7 +35,7 @@ Run `java -jar rescenario.jar Scenario.yml`, and you'll see the result.
 
 ### Definitions
 
-A Rescenario file contains multiple definitions: `requires`, `service` and `scenarios`.
+A Rescenario file contains multiple definitions: `requires`, `services` and `scenarios`.
 
 #### `requires` definition
 
@@ -63,7 +63,7 @@ requires:
   - ...
 ```
 
-#### `service` definition
+#### `services` definition
 
 Service definition is to create a RESTful service for each REST scenario.
 
@@ -82,7 +82,7 @@ Services are identified by **domain**, which will also be declared in
 `scenario` definitions, Scenarios pick up services by filtering them
 with **domain**.
 
-#### `scenario` definition
+#### `scenarios` definition
 
 Scenario definition is to describe the steps to actual run the test.
 
